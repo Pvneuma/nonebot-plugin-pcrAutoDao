@@ -31,7 +31,7 @@ async def handle_autoDao(state: T_State):
 
 @autoDao.got("index")
 async def handle_query(state: T_State, index:str=ArgPlainText("index")):
-    i=int(index)
+    i=int(index)-1
     set=state["set_list"][i]
     row = await db_util.get_by_set(set)
     await autoDao.finish(row["dao"])
@@ -63,6 +63,6 @@ async def getThirdDao(set: str = ArgPlainText("set"), first: str = ArgPlainText(
 
 async def insert_set(set: str, first: str, second: str, third: str):
     boss_list = set.split(",")
-    dao = f'\n{boss_list[0]}：{first}\n{boss_list[1]}：{second}\n{boss_list[2]}：{third}'
+    dao = f'{boss_list[0]}：{first}\n{boss_list[1]}：{second}\n{boss_list[2]}：{third}'
     doc = {"set": set, "dao": dao}
     await db_util.insert(doc)

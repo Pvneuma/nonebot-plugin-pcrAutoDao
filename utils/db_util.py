@@ -7,7 +7,7 @@ mydb = myclient["nonebot-plugin-pcrAutoDao"]
 
 def get_col():
     date = getDate()
-    return mydb["test"]
+    return mydb["test_dev"]
 
 
 async def insert(doc):

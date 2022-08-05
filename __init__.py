@@ -4,7 +4,7 @@ from nonebot.matcher import Matcher
 from nonebot.adapters.onebot.v11 import Message
 from nonebot.params import Arg, CommandArg, ArgPlainText
 
-from utils import db_util
+from .utils import db_util
 
 autoDao = on_command("autoDao", aliases={"自动刀", "凹凸刀"}, priority=5, block=True)
 addAuto = on_command("addAuto", aliases={"添加套餐"}, priority=4, block=True)

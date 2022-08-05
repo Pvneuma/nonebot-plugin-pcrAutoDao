@@ -14,7 +14,7 @@ addAuto = on_command("addAuto", aliases={"添加套餐"}, priority=4, block=True
 
 @autoDao.handle()
 async def handle_autoDao(state: T_State):
-    col = db_util.get_all
+    col = db_util.get_all()
     set_list = []
     for x in col:
         set_list.append(f'{x["set"]}')

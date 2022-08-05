@@ -24,5 +24,3 @@ def get_by_set(set: str):
     col = get_col()
     row = col.find({"set": set})
     return row[0]
-
-print("123")

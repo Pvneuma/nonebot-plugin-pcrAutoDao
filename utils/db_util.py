@@ -10,7 +10,7 @@ def get_col():
     return mydb["test"]
 
 
-def insert(doc):
+async def insert(doc):
     col = get_col()
     col.insert_one(doc)
 
@@ -20,7 +20,7 @@ async def get_all():
     return col
 
 
-def get_by_set(set: str):
+async def get_by_set(set: str):
     col = get_col()
     row = col.find({"set": set})
     return row[0]

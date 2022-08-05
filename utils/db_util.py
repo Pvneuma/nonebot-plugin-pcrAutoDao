@@ -21,6 +21,9 @@ async def get_all():
     return col
 
 
-async def get_by_set(set:str):
+async def get_by_set(set:str)->dict:
     col = get_col({"set":set})
-    return col[0]
+    for x in col:
+        res=x
+        break
+    return res

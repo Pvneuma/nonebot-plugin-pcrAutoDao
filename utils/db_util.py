@@ -1,18 +1,26 @@
+from colorama import Cursor
 import pymongo
 from .date_util import getDate
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["nonebot-plugin-pcrAutoDao"]
 
+
 def get_col():
-    date=getDate()
+    date = getDate()
     return mydb["test"]
 
-def insert(doc):
-    col=get_col()
+
+async def insert(doc):
+    col = get_col()
     col.insert_one(doc)
 
-def getAll():
-    col=get_col()
-    for x in col.find():
-        print(x)
+
+async def get_all():
+    col = get_col()
+    return col
+
+
+async def get_by_set(set:str):
+    col = get_col({"set":set})
+    return col[0]

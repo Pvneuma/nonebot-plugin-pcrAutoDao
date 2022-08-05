@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "pcr-bot"
+version = "0.1.0"
+description = ""
+authors = ["wxy <wuxinyuanwxy@163.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+nb-cli = "^0.6.7"
+pymongo = "^4.2.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "tsinghua"
+default = true
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"

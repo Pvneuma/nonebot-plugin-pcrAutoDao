@@ -1,3 +1,4 @@
+import re
 from colorama import Cursor
 import pymongo
 from .date_util import getDate
@@ -11,7 +12,7 @@ def get_col():
     return mydb["test"]
 
 
-async def insert(doc):
+def insert(doc):
     col = get_col()
     col.insert_one(doc)
 
@@ -21,9 +22,9 @@ async def get_all():
     return col
 
 
-async def get_by_set(set:str)->dict:
-    col = get_col({"set":set})
-    for x in col:
-        res=x
-        break
-    return res
+def get_by_set(set: str):
+    col = get_col()
+    row = col.find({"set": set})
+    return row[0]
+
+print("123")

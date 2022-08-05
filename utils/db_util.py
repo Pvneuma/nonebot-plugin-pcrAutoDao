@@ -1,5 +1,3 @@
-import re
-from colorama import Cursor
 import pymongo
 from .date_util import getDate
 

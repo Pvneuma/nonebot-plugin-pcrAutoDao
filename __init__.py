@@ -35,12 +35,13 @@ async def handle_query(state: T_State, index: str = ArgPlainText("index")):
     except:
         autoDao.finish("套餐号好像不对呢")
     rows = await db_util.get_by_set(set)
-    msg=""
-    i=1
+    msg = ""
+    i = 1
     for row in rows:
-        msg+=row["dao"]
+        msg += row["dao"]
         if i != len(rows):
-            msg+="\n\n"
+            msg += "\n\n"
+        i += 1
     await autoDao.finish(msg)
 
 
@@ -76,7 +77,7 @@ async def insert_set(set: str, first: str, second: str, third: str):
 
 async def get_sets():
     col = await db_util.get_all()
-    temp=set()
+    temp = set()
     for x in col:
         temp.add(f'{x["set"]}')
     return list(temp)

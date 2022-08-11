@@ -49,8 +49,6 @@ async def getSet(matcher: Matcher, set: str = ArgPlainText("set")):
     boss_list = set.split(",")
     if len(boss_list) < 3:
         await addSet.finish("套餐有问题哦，检查一下重新发送吧")
-    set = set.upper()
-    matcher.set_arg("set", set)
 
 
 @addSet.got("first")
@@ -65,7 +63,7 @@ async def getSecondDao():
 
 @addSet.got("third")
 async def getThirdDao(set: str = ArgPlainText("set"), first: str = ArgPlainText("first"), second: str = ArgPlainText("second"), third: str = ArgPlainText("third")):
-    await insert_set(set, first, second, third)
+    await insert_set(set.upper(), first, second, third)
     await addSet.finish("三刀记录好了哦")
 
 

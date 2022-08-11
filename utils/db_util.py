@@ -23,5 +23,8 @@ async def get_all():
 async def get_by_set(set: str):
     col = get_col()
     row = col.find({"set": set})
-    return row[0]
+    rows=[]
+    for x in row:
+        rows.append(x)
+    return rows
 

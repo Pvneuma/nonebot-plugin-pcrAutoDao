@@ -1,4 +1,4 @@
-from nonebot import on_command, on_keyword
+from nonebot import on_command, on_shell_command
 from nonebot.rule import to_me
 from nonebot.matcher import Matcher
 from nonebot.adapters.onebot.v11 import Message
@@ -9,15 +9,13 @@ from .utils import db_util
 
 autoDao = on_command("autoDao", aliases={
                      "查自动刀", "查凹凸刀"}, priority=5, block=True)
-addAuto = on_command("addAuto", aliases={"添加套餐"}, priority=4, block=True)
+addSet = on_command("addSet", aliases={"添加套餐"}, priority=4, block=True)
+# dropAuto = on_command("dropSet", aliases={"删除套餐"}, priority=6, block=True)
 
 
 @autoDao.handle()
 async def handle_autoDao(state: T_State):
-    col =  await db_util.get_all()
-    set_list = []
-    for x in col:
-        set_list.append(f'{x["set"]}')
+    set_list = await get_sets()
     state["set_list"] = set_list
     msg = ""
     i = 1
@@ -30,35 +28,45 @@ async def handle_autoDao(state: T_State):
 
 
 @autoDao.got("index")
-async def handle_query(state: T_State, index:str=ArgPlainText("index")):
-    i=int(index)-1
-    set=state["set_list"][i]
-    row = await db_util.get_by_set(set)
-    await autoDao.finish(row["dao"])
+async def handle_query(state: T_State, index: str = ArgPlainText("index")):
+    try:
+        i = int(index)-1
+        set = state["set_list"][i]
+    except:
+        autoDao.finish("套餐号好像不对呢")
+    rows = await db_util.get_by_set(set)
+    msg=""
+    i=1
+    for row in rows:
+        msg+=row["dao"]
+        if i != len(rows):
+            msg+="\n\n"
+    await autoDao.finish(msg)
 
 
-
-@addAuto.got("set", prompt="是哪三个王呢？")
-async def getSet(set: str = ArgPlainText("set")):
+@addSet.got("set", prompt="是哪三个王呢？")
+async def getSet(matcher: Matcher, set: str = ArgPlainText("set")):
     boss_list = set.split(",")
     if len(boss_list) < 3:
-        await addAuto.finish("套餐有问题哦，检查一下重新发送吧")
+        await addSet.finish("套餐有问题哦，检查一下重新发送吧")
+    set = set.upper()
+    matcher.set_arg("set", set)
 
 
-@addAuto.got("first", prompt="第一刀的阵容是？")
+@addSet.got("first")
 async def getFirstDao():
     pass
 
 
-@addAuto.got("second", prompt="第二刀的阵容是？")
+@addSet.got("second")
 async def getSecondDao():
     pass
 
 
-@addAuto.got("third", prompt="第三刀的阵容是？")
+@addSet.got("third")
 async def getThirdDao(set: str = ArgPlainText("set"), first: str = ArgPlainText("first"), second: str = ArgPlainText("second"), third: str = ArgPlainText("third")):
     await insert_set(set, first, second, third)
-    await addAuto.finish("三刀记录好了哦")
+    await addSet.finish("三刀记录好了哦")
 
 
 async def insert_set(set: str, first: str, second: str, third: str):
@@ -66,3 +74,22 @@ async def insert_set(set: str, first: str, second: str, third: str):
     dao = f'{boss_list[0]}：{first}\n{boss_list[1]}：{second}\n{boss_list[2]}：{third}'
     doc = {"set": set, "dao": dao}
     await db_util.insert(doc)
+
+
+async def get_sets():
+    col = await db_util.get_all()
+    temp=set()
+    for x in col:
+        temp.add(f'{x["set"]}')
+    return list(temp)
+
+
+# @dropAuto.handle()
+# async def handle_drop_set(arg: Message = CommandArg()):
+#     arg = arg.extract_plain_text
+#     set_list = await get_sets()
+#     try:
+#         i = int(arg)
+#         set = set_list[i]
+#     except:
+#         dropAuto.finish("套餐号好像不对呢")

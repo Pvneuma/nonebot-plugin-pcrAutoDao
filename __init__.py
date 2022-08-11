@@ -16,6 +16,8 @@ addSet = on_command("addSet", aliases={"添加套餐"}, priority=4, block=True)
 @autoDao.handle()
 async def handle_autoDao(state: T_State):
     set_list = await get_sets()
+    if len(set_list) == 0:
+        await autoDao.finish("当前还没有套餐哦")
     state["set_list"] = set_list
     msg = ""
     i = 1

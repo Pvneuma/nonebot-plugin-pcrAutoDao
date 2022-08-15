@@ -39,7 +39,7 @@ async def handle_query(state: T_State, event: Event, index: str = ArgPlainText("
         i = int(index)-1
         set = state["set_list"][i]
     except:
-        autoDao.finish("套餐号好像不对呢")
+        await autoDao.finish("套餐号好像不对呢")
     rows = await db_util.get_by_set(set)
     msg = ""
     i = 1
@@ -96,18 +96,18 @@ async def handle_drop_set(event: Event, arg: Message = CommandArg()):
     try:
         rows = lastQuery[event.get_user_id]
     except:
-        dropAuto.finish("好像还没查询过自动刀呢")
+        await dropAuto.finish("好像还没查询过自动刀呢")
     try:
         if arg != '':
             i = int(arg)
             row = rows[i-1]
         else:
             row = rows[0]
+        res = await db_util.delete_row(row["set"], row["dao"])
+        if res:
+            msg="删除成功"
+        else:
+            msg="删除失败"
+        await dropAuto.finish(msg)
     except:
-        dropAuto.finish("序号好像不对呢")
-    res = await db_util.delete_row(row["set"], row["dao"])
-    if res:
-        msg="删除成功"
-    else:
-        msg="删除失败"
-    await dropAuto.finish(msg)
+        await dropAuto.finish("序号好像不对呢")

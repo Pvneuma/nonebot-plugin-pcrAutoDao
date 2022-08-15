@@ -1,6 +1,7 @@
 from nonebot import on_command
 from nonebot.rule import to_me
 from nonebot.matcher import Matcher
+from nonebot.log import logger
 from nonebot.adapters.onebot.v11 import Message, Event
 from nonebot.params import Arg, CommandArg, ArgPlainText
 from nonebot.typing import T_State
@@ -110,5 +111,7 @@ async def handle_drop_set(event: Event, arg: Message = CommandArg()):
         else:
             msg="删除失败"
         await dropAuto.finish(msg)
-    except:
+    except Exception as e:
+        logger.exception(e)
         await dropAuto.finish("序号好像不对呢")
+        

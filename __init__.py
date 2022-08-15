@@ -106,8 +106,7 @@ async def handle_drop_set(event: Event, arg: Message = CommandArg()):
         else:
             row = rows[-1]
         res = await db_util.delete_row(row["set"], row["dao"])
-    except Exception as e:
-        logger.exception(e)
+    except:
         await dropAuto.finish("序号好像不对呢")
     msg=""
     if res:

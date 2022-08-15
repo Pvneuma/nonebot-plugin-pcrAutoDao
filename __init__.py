@@ -94,6 +94,7 @@ async def get_sets():
 @dropAuto.handle()
 async def handle_drop_set(event: Event, arg: Message = CommandArg()):
     index = arg.extract_plain_text().strip()
+    res=False
     try:
         rows = lastQuery[event.get_user_id()]
     except:
@@ -105,13 +106,13 @@ async def handle_drop_set(event: Event, arg: Message = CommandArg()):
         else:
             row = rows[-1]
         res = await db_util.delete_row(row["set"], row["dao"])
-        msg=""
-        if res:
-            msg="删除成功"
-        else:
-            msg="删除失败"
-        await dropAuto.finish(msg)
     except Exception as e:
         logger.exception(e)
         await dropAuto.finish("序号好像不对呢")
+    msg=""
+    if res:
+        msg="删除成功"
+    else:
+        msg="删除失败"
+    await dropAuto.finish(msg)
         

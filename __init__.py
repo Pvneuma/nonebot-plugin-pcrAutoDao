@@ -92,7 +92,7 @@ async def get_sets():
 
 @dropAuto.handle()
 async def handle_drop_set(event: Event, arg: Message = CommandArg()):
-    arg = arg.extract_plain_text.strip()
+    arg = arg.extract_plain_text().strip()
     try:
         rows = lastQuery[event.get_user_id]
     except:

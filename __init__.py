@@ -102,8 +102,9 @@ async def handle_drop_set(event: Event, arg: Message = CommandArg()):
             i = int(arg)
             row = rows[i-1]
         else:
-            row = rows[0]
+            row = rows[-1]
         res = await db_util.delete_row(row["set"], row["dao"])
+        msg=""
         if res:
             msg="删除成功"
         else:

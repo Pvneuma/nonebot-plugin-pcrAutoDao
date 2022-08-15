@@ -99,7 +99,7 @@ async def handle_drop_set(event: Event, arg: Message = CommandArg()):
     except:
         await dropAuto.finish("好像还没查询过自动刀呢")
     try:
-        if arg != '':
+        if index != '':
             i = int(index)
             row = rows[i-1]
         else:

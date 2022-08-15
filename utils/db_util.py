@@ -17,7 +17,7 @@ async def insert(doc):
 
 async def get_all():
     col = get_col()
-    return await col.find()
+    return col.find()
 
 
 async def get_by_set(set: str):

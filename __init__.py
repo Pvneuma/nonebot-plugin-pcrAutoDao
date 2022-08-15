@@ -93,14 +93,14 @@ async def get_sets():
 
 @dropAuto.handle()
 async def handle_drop_set(event: Event, arg: Message = CommandArg()):
-    arg = arg.extract_plain_text().strip()
+    index = arg.extract_plain_text().strip()
     try:
         rows = lastQuery[event.get_user_id()]
     except:
         await dropAuto.finish("好像还没查询过自动刀呢")
     try:
         if arg != '':
-            i = int(arg)
+            i = int(index)
             row = rows[i-1]
         else:
             row = rows[-1]

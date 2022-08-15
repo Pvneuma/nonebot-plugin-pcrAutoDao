@@ -1,5 +1,4 @@
 from nonebot import on_command
-from nonebot.log import logger
 from nonebot.rule import to_me
 from nonebot.matcher import Matcher
 from nonebot.adapters.onebot.v11 import Message, Event
@@ -49,8 +48,7 @@ async def handle_query(state: T_State, event: Event, index: str = ArgPlainText("
         if i != len(rows):
             msg += "\n\n"
         i += 1
-    lastQuery[event.get_user_id] = rows
-    logger.info(f'{event.get_user_id}查询了套餐')
+    lastQuery[event.get_user_id()] = rows
     await autoDao.finish(msg)
 
 
@@ -96,8 +94,7 @@ async def get_sets():
 async def handle_drop_set(event: Event, arg: Message = CommandArg()):
     arg = arg.extract_plain_text().strip()
     try:
-        logger.info(f'{event.get_user_id}查询了套餐')
-        rows = lastQuery[event.get_user_id]
+        rows = lastQuery[event.get_user_id()]
     except:
         await dropAuto.finish("好像还没查询过自动刀呢")
     try:

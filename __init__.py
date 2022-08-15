@@ -78,7 +78,7 @@ async def getThirdDao(set: str = ArgPlainText("set"), first: str = ArgPlainText(
 
 async def insert_set(set: str, first: str, second: str, third: str):
     boss_list = set.split(",")
-    dao = f'{boss_list[0]}：{first}\n{boss_list[1]}：{second}\n{boss_list[2]}：{third}'
+    dao = f'{boss_list[0].strip()}：{first.strip()}\n{boss_list[1].strip()}：{second.strip()}\n{boss_list[2].strip()}：{third.strip()}'
     doc = {"set": set, "dao": dao}
     await db_util.insert(doc)
 

@@ -12,19 +12,24 @@ def get_col():
 
 async def insert(doc):
     col = get_col()
-    col.insert_one(doc)
+    await col.insert_one(doc)
 
 
 async def get_all():
     col = get_col()
-    return col.find()
+    return await col.find()
 
 
 async def get_by_set(set: str):
     col = get_col()
-    row = col.find({"set": set})
-    rows=[]
+    row = await col.find({"set": set})
+    rows = []
     for x in row:
         rows.append(x)
     return rows
 
+
+async def delete_row(set: str, dao: str):
+    col = get_col()
+    res = await col.delete_one({"set": set, "dao": dao}).deleted_count
+    return res==1

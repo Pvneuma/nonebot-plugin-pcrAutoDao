@@ -1,16 +1,20 @@
 from nonebot import on_command, on_shell_command
 from nonebot.rule import to_me
 from nonebot.matcher import Matcher
-from nonebot.adapters.onebot.v11 import Message
+from nonebot.adapters.onebot.v11 import Message, Event
 from nonebot.params import Arg, CommandArg, ArgPlainText
 from nonebot.typing import T_State
+from nonebot.permission import SUPERUSER
 
 from .utils import db_util
 
 autoDao = on_command("autoDao", aliases={
                      "查自动刀", "查凹凸刀"}, priority=5, block=True)
 addSet = on_command("addSet", aliases={"添加套餐"}, priority=4, block=True)
-# dropAuto = on_command("dropSet", aliases={"删除套餐"}, priority=6, block=True)
+dropAuto = on_command("dropSet", aliases={
+                      "删除套餐"}, priority=6, block=True)
+
+lastQuery = {}
 
 
 @autoDao.handle()
@@ -30,7 +34,7 @@ async def handle_autoDao(state: T_State):
 
 
 @autoDao.got("index")
-async def handle_query(state: T_State, index: str = ArgPlainText("index")):
+async def handle_query(state: T_State, event: Event, index: str = ArgPlainText("index")):
     try:
         i = int(index)-1
         set = state["set_list"][i]
@@ -44,11 +48,12 @@ async def handle_query(state: T_State, index: str = ArgPlainText("index")):
         if i != len(rows):
             msg += "\n\n"
         i += 1
+    lastQuery[event.get_user_id] = rows
     await autoDao.finish(msg)
 
 
 @addSet.got("set", prompt="是哪三个王呢？")
-async def getSet(matcher: Matcher, set: str = ArgPlainText("set")):
+async def getSet(set: str = ArgPlainText("set")):
     boss_list = set.split(",")
     if len(boss_list) < 3:
         await addSet.finish("套餐有问题哦，检查一下重新发送吧")
@@ -85,12 +90,24 @@ async def get_sets():
     return list(temp)
 
 
-# @dropAuto.handle()
-# async def handle_drop_set(arg: Message = CommandArg()):
-#     arg = arg.extract_plain_text
-#     set_list = await get_sets()
-#     try:
-#         i = int(arg)
-#         set = set_list[i]
-#     except:
-#         dropAuto.finish("套餐号好像不对呢")
+@dropAuto.handle()
+async def handle_drop_set(event: Event, arg: Message = CommandArg()):
+    arg = arg.extract_plain_text.strip()
+    try:
+        rows = lastQuery[event.get_user_id]
+    except:
+        dropAuto.finish("好像还没查询过自动刀呢")
+    try:
+        if arg != '':
+            i = int(arg)
+            row = rows[i-1]
+        else:
+            row = rows[0]
+    except:
+        dropAuto.finish("序号好像不对呢")
+    res = await db_util.delete_row(row["set"], row["dao"])
+    if res:
+        msg="删除成功"
+    else:
+        msg="删除失败"
+    await dropAuto.finish(msg)
